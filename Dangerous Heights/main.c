@@ -31,7 +31,7 @@
 int mouse[2];
 int teclas[5];
 
-int tela_atual = 0, fase_atual = 1;
+int tela_atual = 0, fase_atual = 3;
 
 int fase[LINHAS_FASE][COLUNAS_FASE];
 double sizeWidth = (double)LARGURA_DO_MUNDO / COLUNAS_FASE;
@@ -1654,12 +1654,12 @@ void desenharObstaculos(){
                 if(tom <= 0.95)
                     tom += 0.05;
                 glPushMatrix();
-                    glTranslatef(obstaculos[i].xCentro, obstaculos[i].yCentro, .8);
+                    glTranslatef(obstaculos[i].xCentro, obstaculos[i].yCentro, 1);
                     double x = ((j*3)+1.5) * cos(obstaculos[i].angulo);
                     double y = ((j*3)+1.5) * sin(obstaculos[i].angulo);
-                    desenhaCirculo(1.5, x, y, .05);
+                    desenhaCirculo(1.5, x, y, 0);
                     glColor3f(0,0,0);
-                    desenhaCirculo(1.8, x, y, .04);
+                    desenhaCirculo(1.8, x, y, 0);
                 glPopMatrix();
             }
         }
