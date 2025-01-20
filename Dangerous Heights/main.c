@@ -1850,7 +1850,6 @@ void criaListasFases() {
         sprintf(arquivo, "fases/fase%d.txt", l+1);
         lerFase(arquivo, 0);
         if(l==0){
-            criaFundoLista1();
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texturasMundo.grama[0]);
             glBegin(GL_POLYGON);
@@ -1867,7 +1866,6 @@ void criaListasFases() {
             
         }
         if(l==1){
-            criaFundoLista2();
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texturasMundo.grama[1]);
             glBegin(GL_POLYGON);
@@ -1883,7 +1881,6 @@ void criaListasFases() {
             glDisable(GL_TEXTURE_2D);
         }
         if(l==2){
-            criaFundoLista3();
             glColor3f(1,1,1);
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texturasMundo.grama[2]);
@@ -1901,7 +1898,6 @@ void criaListasFases() {
         }
 
         if(l==3){
-            criaFundoLista4();
             glColor3f(1,1,1);
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texturasMundo.grama[3]);
@@ -1918,7 +1914,6 @@ void criaListasFases() {
             glDisable(GL_TEXTURE_2D);
         }
         if(l==4){
-            criaFundoLista5();
             glColor3f(1,1,1);
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texturasMundo.grama[4]);
@@ -1948,30 +1943,7 @@ void criaListasFases() {
             glEnd();
             glDisable(GL_TEXTURE_2D);
         }
-        for (int i = 0; i < LINHAS_FASE; i++)
-        {
-            for (int j = 0; j < COLUNAS_FASE; j++)
-            {
-                int linha_atual = LINHAS_FASE-1-i;
-                if (fase[linha_atual][j] == 1)
-                {
-                    glColor3f(1, 1, 1);
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glPushMatrix();
-                        glTranslatef(j * sizeWidth + sizeWidth / 2 , i * sizeHeight + sizeHeight / 2, 0);
-                        desenharRetanguloComTextura(sizeWidth, sizeHeight, texturasMundo.plataforma[l]);
-                    glPopMatrix();
-                }
-                if(fase[linha_atual][j]==3){
-                    glColor3f(1, 1, 1);
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glPushMatrix();
-                        glTranslatef(j * sizeWidth + sizeWidth / 2 , i * sizeHeight + sizeHeight / 2, 0);
-                        desenharRetanguloComTextura(sizeWidth, sizeHeight, texturasMundo.blocoDeslizante);
-                    glPopMatrix();
-                }
-            }
-        }
+        
         glEndList();
     }
     free(arquivo);
@@ -2730,6 +2702,33 @@ void desenharPowerUps(){
     }
 }
 
+void desenhaPlataforma(){
+    for (int i = 0; i < LINHAS_FASE; i++)
+        {
+            for (int j = 0; j < COLUNAS_FASE; j++)
+            {
+                int linha_atual = LINHAS_FASE-1-i;
+                if (fase[linha_atual][j] == 1)
+                {
+                    glColor3f(1, 1, 1);
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glPushMatrix();
+                        glTranslatef(j * sizeWidth + sizeWidth / 2 , i * sizeHeight + sizeHeight / 2, 0);
+                        desenharRetanguloComTextura(sizeWidth, sizeHeight, texturasMundo.plataforma[fase_atual-1]);
+                    glPopMatrix();
+                }
+                if(fase[linha_atual][j]==3){
+                    glColor3f(1, 1, 1);
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glPushMatrix();
+                        glTranslatef(j * sizeWidth + sizeWidth / 2 , i * sizeHeight + sizeHeight / 2, 0);
+                        desenharRetanguloComTextura(sizeWidth, sizeHeight, texturasMundo.blocoDeslizante);
+                    glPopMatrix();
+                }
+            }
+        }
+}
+
 void desenhaTransicaoPortal(){
     glColor4f(0,0,0,personagem.rotacao/100);
     glPushMatrix();
@@ -2744,21 +2743,29 @@ void desenharFase()
     glCallList(listas_fases[fase_atual-1]);
 
     if(fase_atual==1){
+        criaFundoLista1();
         atualizaParallaxFase1();
+        
     }
     if(fase_atual==2){
+        criaFundoLista2();
         atualizaParallaxFase2();
     }
     if(fase_atual==3){
+        criaFundoLista3();
         atualizaParallaxFase3();
     }
     if(fase_atual==4){
+        criaFundoLista4();
         atualizaParallaxFase4();
     }
 
     if(fase_atual==5){
+        criaFundoLista5();
         atualizaParallaxFase5();
     }
+    desenhaChao();
+    desenhaPlataforma();
 
     if(portal.existe)
         desenhaPortal();
@@ -2933,6 +2940,12 @@ void teclaPressionada(unsigned char key, int x, int y)
     case 'd':
         teclas[3] = 1;
         break;
+    case 'j':
+        mouse[0] = 1;
+        break;
+    case 'k':
+        mouse[1] = 1;
+        break;
     case 27:
         exit(0);
     break;
@@ -2965,6 +2978,12 @@ void teclaLiberada(unsigned char key, int x, int y)
     case 'd':
         teclas[3] = 0;
         personagem.movX = 0;
+        break;
+    case 'j':
+        mouse[0] = 0;
+        break;
+    case 'k':
+        mouse[1] = 0;
         break;
     case 32:
         teclas[4]=0;
